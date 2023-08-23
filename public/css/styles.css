@@ -1,0 +1,59 @@
+.bg {
+  background-image: url("/images/beach1.jpg");
+  background-position: center;
+  height: 100%;
+  background-repeat: no-repeat;
+  background-size: cover;
+  font-family: 'Comfortaa', cursive;
+}
+
+.MenuContainer {
+  display: inline-flex;
+  height: 100vh;
+  background-color: rgba(245, 245, 220, 0.486);
+}
+
+.blurContainer {
+  display: inline-flex;
+  height: 100vh;
+  backdrop-filter: blur(10px);
+}
+
+li{
+  color: rgb(0, 0, 0);
+  font-weight: bold;
+  font-family: 'Comfortaa', cursive;
+}
+
+li:hover {
+  color: rgb(190, 110, 4);
+  /* transform: scale(1.1); */
+}
+
+.notesContainer{
+  overflow: auto;
+}
+
+.customCard{
+  font-weight: 600;
+  
+}
+
+.elementChecked:checked+label{
+  text-decoration: line-through;
+}
+
+.error{
+  max-width: 40%;
+}
+
+.innerContainer{
+  backdrop-filter: blur(10px);
+  min-width: fit-content;
+  min-height: fit-content;
+  max-width: 70%;
+  padding: 5rem;
+  margin-top: 10%;
+  width: 50%;
+}
+
