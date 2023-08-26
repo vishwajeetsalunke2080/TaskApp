@@ -13,7 +13,7 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
-const port = process.env.PORT || 80;
+const port = process.env.port || 3000;
 
 // MongoDB connection using mongoose
 const conn = await mongoose.connect(`mongodb+srv://user1:Zypjj2kxTylAtCB0@workshop-bakery.n2rfmy7.mongodb.net/TaskDB`);
