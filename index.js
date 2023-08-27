@@ -33,16 +33,6 @@ const port = process.env.PORT || 3000;
 // MongoDB connection using mongoose
 mongoose.connect(`mongodb+srv://user1:Zypjj2kxTylAtCB0@workshop-bakery.n2rfmy7.mongodb.net/TaskDB`);
 // const conn = await mongoose.connect("mongodb://127.0.0.1:27017/TaskApp")
-// task schema for storing tasks in storeDB
-const taskSchema = mongoose.Schema({
-  taskDesc: {
-    type: String,
-    max: 100,
-    required: [1, "please insert task info"],
-  },
-  taskSwitch: String,
-  username:String,
-});
 
 // user schema for authorization
 const userSchema = mongoose.Schema({
@@ -51,6 +41,21 @@ const userSchema = mongoose.Schema({
   googleId:String,
   name:String,
 })
+
+// task schema for storing tasks in storeDB
+const taskSchema = mongoose.Schema({
+  taskDesc: {
+    type: String,
+    max: 100,
+    required: [1, "please insert task info"],
+  },
+  taskSwitch: String,
+  user:{
+    type:userSchema
+  },
+});
+
+
 
 userSchema.plugin(passportMongoose)
 userSchema.plugin(findOrCreate)
@@ -83,7 +88,7 @@ passport.deserializeUser(function(user, cb) {
 passport.use(new passportGoogle.Strategy({
   clientID:process.env.CLIENT_ID,
   clientSecret:process.env.CLIENT_SECRET,
-  callbackURL:"http://localhost:3000/auth/google/home",
+  callbackURL:"https://taskapp1.azurewebsites.net/auth/google/home",
   userProfileURL:"https://www.googleapis.com/oauth2/v3/userinfo"
 },
 // callback fuction to get authToken,Profile,ect
@@ -130,8 +135,8 @@ app.get("/register",(req,res)=>{
 
 app.get("/home", async function (req, res) {
   if(req.isAuthenticated()){
-      const taskArray = await Task.find({taskSwitch:{$ne: "on"}} ).exec()
-      console.log(req.user);
+      const taskArray = await Task.find({taskSwitch:{$ne: "on"},user:req.user} ).exec()
+      
       res.render("showNote", {
         listOfNotes: taskArray,
         salutation: req.user.name || req.user.username || "User",
@@ -156,7 +161,7 @@ app.get("/addNote", function (req, res) {
 // work profile handler
 app.get("/workProfile", async function (req, res) {
   if(req.isAuthenticated()){
-    const taskArray = await Task.find({taskSwitch:"on"});
+    const taskArray = await Task.find({taskSwitch:"on",user:req.user});
     res.render("workProfile", {
       listOfNotes: taskArray,
       salutation: req.user.name || req.user.username || "User",
@@ -199,7 +204,7 @@ app.post("/login",(req,res)=>{
 
 
 app.post("/register",(req,res)=>{
-  User.register({username:req.body.username,name:req.body.name},req.body.password,(err,user)=>{
+  User.register({username:req.body.username || req.body.name},req.body.password,(err,user)=>{
     if(err){
       console.error(err);
       res.redirect("/")
@@ -217,7 +222,8 @@ app.post("/saveNote", function (req, res) {
     
   const task = new Task({
     taskDesc:req.body.taskInput,
-    taskSwitch:req.body.workSwitch
+    taskSwitch:req.body.workSwitch,
+    user:req.user
   })
   task.save();
 
