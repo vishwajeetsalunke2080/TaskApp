@@ -28,7 +28,7 @@ app.use(session({
 app.use(passport.initialize())
 app.use(passport.session())
 
-const port = process.env.port || 3000;
+const port = process.env.PORT || 3000;
 
 // MongoDB connection using mongoose
 mongoose.connect(`mongodb+srv://user1:Zypjj2kxTylAtCB0@workshop-bakery.n2rfmy7.mongodb.net/TaskDB`);
